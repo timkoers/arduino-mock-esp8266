@@ -1,62 +1,61 @@
 // Header for Wifi Mock
 
-#ifndef __Wifi_h__
-#define __Wifi_h__
+#ifndef WiFi_h
+#define WiFi_h
 
 #include <gmock/gmock.h>
-#include <stdint.h>
 
+extern "C" {
+#include "include/wl_definitions.h"
+}
+
+#include "IPAddress.h"
+
+#include "ESP8266WiFiType.h"
+#include "ESP8266WiFiSTA.h"
+#include "ESP8266WiFiAP.h"
+#include "ESP8266WiFiScan.h"
 #include "ESP8266WiFiGeneric.h"
 
-class WiFi_ {
-  public:
-    void on();  // turns on WiFi module
-    void off();  // turns off WiFi module
-    void connect();  // Attempts to connect to the WiFi network
-    void disconnect(); // Disconnect from the Wifi network
-    bool connecting(); // Return true once the Core is attempting to connect
-    bool ready();  // Return true once Core is connected
-    void listen();  // Enter listening mode
-    bool listening();  // Return true once listen() has been called
-    void setCredentials(); // Allows user to set credentials
-    bool clearCredentials(); // Clear all saved credentials
-    bool hasCredentials();  // Return true if credentials have been already stored in CC3000's memory
-    uint8_t macAddress(); // Return Mac Address of the device
-    char* SSID();  // return SSID of the network
-    int RSSI();  // return signal strength
-    void ping(char*); // ping an IP address
-    void ping(char*,
-              uint8_t); // ping an IP address with a specified number of times
-    char* localIP();  // Return local IP address
-    char* subnetMask(); // Return Subnet mask of the network
-    char* gatewayIP();  // Return the gateway IP address
-};
-extern WiFi_ WiFi;
+#include "WiFiClient.h"
+#include "WiFiServer.h"
+#include "WiFiServerSecure.h"
+#include "WiFiClientSecure.h"
+#include "BearSSLHelpers.h"
+#include "CertStoreBearSSL.h"
 
-class WiFiMock {
+class ESP8266WiFiClass_ : public ESP8266WiFiGenericClass, public ESP8266WiFiSTAClass, public ESP8266WiFiScanClass, public ESP8266WiFiAPClass {
+	public:
+		// workaround same function name with different signature
+		using ESP8266WiFiGenericClass::channel;
+
+		using ESP8266WiFiSTAClass::SSID;
+		using ESP8266WiFiSTAClass::RSSI;
+		using ESP8266WiFiSTAClass::BSSID;
+		using ESP8266WiFiSTAClass::BSSIDstr;
+
+		using ESP8266WiFiScanClass::SSID;
+		using ESP8266WiFiScanClass::encryptionType;
+		using ESP8266WiFiScanClass::RSSI;
+		using ESP8266WiFiScanClass::BSSID;
+		using ESP8266WiFiScanClass::BSSIDstr;
+		using ESP8266WiFiScanClass::channel;
+		using ESP8266WiFiScanClass::isHidden;
+	
+	public:
+		void printDiag(Print& dest);
+		
+		friend class WiFiClient;
+        friend class WiFiServer;
+};
+extern ESP8266WiFiClass_ WiFi;
+
+class ESP8266WiFiClassMock {
   public:
-    MOCK_METHOD0(on, void());
-    MOCK_METHOD0(off, void());
-    MOCK_METHOD0(connect, void());
-    MOCK_METHOD0(disconnect, void());
-    MOCK_METHOD0(connecting, bool());
-    MOCK_METHOD0(ready, bool());
-    MOCK_METHOD0(listen, void());
-    MOCK_METHOD0(listening, bool());
-    MOCK_METHOD0(setCredentials, void());
-    MOCK_METHOD0(clearCredentials, bool());
-    MOCK_METHOD0(hasCredentials, bool());
-    MOCK_METHOD0(macAddress, uint8_t());
-    MOCK_METHOD0(SSID, char * ());
-    MOCK_METHOD0(RSSI, int());
-    MOCK_METHOD1(ping, void(char*));
-    MOCK_METHOD2(ping, void(char*, uint8_t));
-    MOCK_METHOD0(localIP, char * ());
-    MOCK_METHOD0(subnetMask, char * ());
-    MOCK_METHOD0(gatewayIP, char * ());
+    MOCK_METHOD1(printDiag, void(Print&));
 };
 
-WiFiMock* WiFiMockInstance();
+ESP8266WiFiClassMock* WiFiMockInstance();
 void releaseWiFiMock();
 
 #endif

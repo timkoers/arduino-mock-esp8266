@@ -88,6 +88,43 @@ class ESP8266WiFiSTAClassMock {
 	
 	MOCK_METHOD0(isConnected, bool());
 	
+	MOCK_METHOD1(setAutoConnect, bool(bool));
+	MOCK_METHOD0(getAutoConnect, bool());
+	
+	MOCK_METHOD1(setAutoReconnect, bool(bool));
+	MOCK_METHOD0(getAutoReconnect, bool());
+	
+	MOCK_METHOD1(waitForConnectResult, int8_t(unsigned long));
+	
+	MOCK_METHOD1(localIP, IPAddress());
+	
+	MOCK_METHOD1(macAddress, uint8_t*(uint8_t*));
+    MOCK_METHOD0(macAddress, String());
+	
+	MOCK_METHOD0(subnetMask, IPAddress());
+	MOCK_METHOD0(gatewayIP, IPAddress());
+	MOCK_METHOD1(dnsIP, IPAddress(uint8_t));
+	
+	MOCK_METHOD0(hostname, String());
+    MOCK_METHOD1(hostname, bool(const char*));
+	
+	// STA WiFi info
+	MOCK_METHOD0(status, wl_status_t());
+	MOCK_CONST_METHOD0(SSID, String());
+	MOCK_CONST_METHOD0(psk, String());
+	
+	MOCK_METHOD0(BSSID, uint8_t*());
+	MOCK_METHOD0(BSSIDstr, String());
+	
+	MOCK_METHOD0(RSSI, int32_t());
+	
+	MOCK_METHOD1(enableInsecureWEP, void(bool enable));
+	
+	MOCK_METHOD0(beginWPSConfig, bool(void));
+	MOCK_METHOD0(beginSmartConfig, bool());
+	MOCK_METHOD0(stopSmartConfig, bool());
+	MOCK_METHOD0(smartConfigDone, bool());
+	
 	// ....
 };
 
